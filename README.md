@@ -56,7 +56,7 @@ bryce@x1c:~/forks/request$ browserify --bare index.js -o bundle.js && wc -c bund
 `client-request`
 ```
 bryce@x1c:~/forks/client-request$ browserify --bare request.js -o bundle.js && wc -c bundle.js
-4940 bundle.js
+6159 bundle.js
 ```
 
 API
