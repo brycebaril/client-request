@@ -44,7 +44,7 @@ var req = request(options, function callback(err, response, body) {
 
 ```
 
-WHY???
+WHY DID I MAKE THIS?
 ===
 
 `request`
