@@ -12,7 +12,11 @@ var clientId = require("crypto").randomBytes(3).toString("hex")
 var PassThrough = require("stream").PassThrough
 
 var concat = require("./concat")
-var debug = require("util").debuglog("client-request")
+var util = require("util")
+var debug = function noop() {}
+if (util.debuglog != null) {
+  debug = util.debuglog("client-request")
+}
 
 var requestCount = 0
 

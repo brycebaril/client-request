@@ -13,7 +13,11 @@ var cert = fs.readFileSync(path.join(__dirname, "certs", "server", "my-server.cr
 var key = fs.readFileSync(path.join(__dirname, "certs", "server", "my-server.key.pem"))
 var ca = fs.readFileSync(path.join(__dirname, 'certs', 'server', 'my-root-ca.crt.pem'))
 
-var debug = require("util").debuglog("client-request")
+var util = require("util")
+var debug = function noop() {}
+if (util.debuglog != null) {
+  debug = util.debuglog("client-request")
+}
 
 function start(callback) {
 
@@ -61,7 +65,7 @@ function middleware(req, res) {
   var path = parsed.path
   var method = req.method
   if (method == "POST") {
-    function jsonCollect(contents) {
+    var jsonCollect = function jsonCollect(contents) {
       var data
       try {
         data = JSON.parse(contents.toString())
@@ -83,7 +87,7 @@ function middleware(req, res) {
       }
     }
 
-    function collect(contents) {
+    var collect = function collect(contents) {
       if (contents.toString() == "test data") {
         debug("good post data")
         res.statusCode = 201
