@@ -1,6 +1,6 @@
 {
   "name": "client-request",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A zero-dependency stripped-down http client request module based on the http://npm.im/request API",
   "main": "request.js",
   "directories": {
@@ -21,7 +21,7 @@
     "stream-spigot": "~3.0.5",
     "tape": "~4.0.0"
   },
-  "dependencies": { },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/brycebaril/client-request.git"
