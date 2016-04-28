@@ -9,8 +9,6 @@ var path = require("path");
 
 var clientId = require("crypto").randomBytes(3).toString("hex");
 
-var PassThrough = require("stream").PassThrough;
-
 var concat = require("./concat");
 var util = require("util");
 var debug = function noop() {};
