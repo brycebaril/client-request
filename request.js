@@ -18,8 +18,6 @@ if (util.debuglog != null) {
   debug = util.debuglog("client-request")
 }
 
-
-
 function request(requestOptions, callback) {
 
   if (requestOptions == null) {
