@@ -174,5 +174,9 @@ function formatOptions(options) {
     })
   }
 
+  if (options.agent != null) {
+    opts.agent = options.agent
+  }
+
   return opts
 }
