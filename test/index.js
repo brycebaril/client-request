@@ -4,6 +4,7 @@ var request = require("../request")
 var spigot = require("stream-spigot")
 var fs = require("fs")
 var path = require("path")
+var http = require("http")
 
 var ca = fs.readFileSync(path.join(__dirname, "certs", "client", "my-root-ca.crt.pem"))
 
@@ -240,6 +241,31 @@ require("./test_server")(function ready(servers) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 201, "statusCode 201")
       t.deepEqual(body.toString(), "OK")
+      t.end()
+    })
+  })
+
+  test("using options.agent", function (t) {
+    var agent = new http.Agent()
+    var agentUsed = false
+
+    agent.createConnectionOriginal = agent.createConnection
+    agent.createConnection = function (options, callback) {
+      agentUsed = true
+      return this.createConnectionOriginal(options, callback)
+    }
+
+    var opts = {
+      uri: servers.http_address,
+      agent: agent
+    }
+
+    request(opts, function (err, response, body) {
+      t.notOk(err, "no error")
+      t.equal(response.statusCode, 200, "statusCode 200")
+      t.ok(Buffer.isBuffer(body), "body is a Buffer")
+      t.equal(body.toString(), "HELLO THERE", "expected content")
+      t.equal(agentUsed, true, "expected request to pass through agent")
       t.end()
     })
   })
