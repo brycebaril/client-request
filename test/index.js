@@ -1,6 +1,7 @@
 var test = require("tape")
 
 var request = require("../request")
+var promise = require("../promise")
 var spigot = require("stream-spigot")
 var fs = require("fs")
 var path = require("path")
@@ -22,6 +23,17 @@ require("./test_server")(function ready(servers) {
     })
   })
 
+  test("promise basic", function (t) {
+    var opts = {
+      uri: servers.http_address
+    }
+    promise(opts).then(function (body) {
+      t.ok(Buffer.isBuffer(body), "body is a Buffer")
+      t.equal(body.toString(), "HELLO THERE", "expected content")
+      t.end()
+    })
+  })
+
   test("get json", function (t) {
     var opts = {
       uri: servers.http_address + "/foo.json",
@@ -30,6 +42,17 @@ require("./test_server")(function ready(servers) {
     request(opts, function (err, response, body) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 200, "statusCode 200")
+      t.deepEqual(body, {some: "good json"}, "expected content")
+      t.end()
+    })
+  })
+
+  test("promise get json", function (t) {
+    var opts = {
+      uri: servers.http_address + "/foo.json",
+      json: true
+    }
+    promise(opts).then(function (body) {
       t.deepEqual(body, {some: "good json"}, "expected content")
       t.end()
     })
@@ -44,6 +67,17 @@ require("./test_server")(function ready(servers) {
       t.ok(err, "expect an error")
       t.equal(response.statusCode, 200, "statusCode 200")
       t.notOk(body, "no body")
+      t.end()
+    })
+  })
+
+  test("promise bad json", function (t) {
+    var opts = {
+      uri: servers.http_address + "/bad.json",
+      json: true
+    }
+    promise(opts).catch(function (err) {
+      t.ok(err, "expect an error")
       t.end()
     })
   })
