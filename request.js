@@ -164,6 +164,7 @@ function formatOptions(options) {
       port: Number(u.port) || (protocol === "https:" ? 443 : 80),
       path: u.path,
       headers: headers,
+      withCredentials: options.withCredentials || false
   }
 
   if (protocol === 'https:') {
