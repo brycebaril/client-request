@@ -1,6 +1,6 @@
 {
   "name": "client-request",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A zero-dependency stripped-down http client request module based on the http://npm.im/request API",
   "main": "request.js",
   "directories": {
