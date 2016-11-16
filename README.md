@@ -44,6 +44,14 @@ var req = request(options, function callback(err, response, body) {
 
 ```
 
+```javascript
+var requestPromise = require("client-request/promise")
+
+requestPromise(options).then(function (body) {
+  console.log(body)
+})
+```
+
 WHY DID I MAKE THIS?
 ===
 
