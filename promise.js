@@ -1,8 +1,6 @@
 const request = require('./request')
 
-module.exports = requestPromise
-
-function requestPromise(opts) {
+module.exports = function requestPromise(opts) {
   return new Promise(function(resolve, reject) {
     request(opts, function(err, response, body) {
       if (err) {
