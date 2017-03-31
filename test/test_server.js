@@ -107,6 +107,12 @@ function middleware(req, res) {
   }
 
 
+  if (path.indexOf("redirect.json") >= 0) {
+    debug("redirect.json")
+    res.statusCode = 301
+    res.setHeader('location', '/redirect-fake.json')
+    return res.end()
+  }
   if (path.indexOf("bad.json") >= 0) {
     debug("bad.json")
     return res.end('{"some":"bad json')
