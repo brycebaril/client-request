@@ -8,7 +8,7 @@ function requestPromise(opts) {
       if (err) {
         reject(err)
       } else if (response.statusCode !== 200) {
-        const err = new Error('Status code ' + response.statusCode)
+        err = new Error('Status code ' + response.statusCode)
         err.response = response
         err.body = body
         reject(err)
