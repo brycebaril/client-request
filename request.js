@@ -92,7 +92,14 @@ function request(requestOptions, callback) {
   debug(requestId, "calledBack:", calledBack)
   var req = transport.request(options, function onResponse(res) {
     metadata = res
-    res.pipe(concat(collect))
+
+    var contentLength = parseInt(res.headers['content-length'], 10)
+
+    if (contentLength === 0) {
+      return reply(null, null)
+    } else {
+      res.pipe(concat(collect))
+    }
     res.once("error", function resError(err) {
       return reply(err)
     })

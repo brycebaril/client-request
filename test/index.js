@@ -47,6 +47,19 @@ require("./test_server")(function ready(servers) {
     })
   })
 
+  test("get json, but response has no body", function (t) {
+    var opts = {
+      uri: servers.http_address + "/redirect.json",
+      json: true
+    }
+
+    request(opts, function (err, response, body) {
+      t.notOk(err, "no error")
+      t.equal(response.statusCode, 301, "statusCode 301")
+      t.end()
+    })
+  })
+
   test("promise get json", function (t) {
     var opts = {
       uri: servers.http_address + "/foo.json",
