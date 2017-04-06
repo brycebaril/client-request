@@ -27,9 +27,10 @@ require("./test_server")(function ready(servers) {
     var opts = {
       uri: servers.http_address
     }
-    promise(opts).then(function (body) {
-      t.ok(Buffer.isBuffer(body), "body is a Buffer")
-      t.equal(body.toString(), "HELLO THERE", "expected content")
+    promise(opts).then(function (result) {
+      t.equal(result.response.statusCode, 200, "statusCode 200")
+      t.ok(Buffer.isBuffer(result.body), "body is a Buffer")
+      t.equal(result.body.toString(), "HELLO THERE", "expected content")
       t.end()
     })
   })
@@ -42,7 +43,19 @@ require("./test_server")(function ready(servers) {
     request(opts, function (err, response, body) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 200, "statusCode 200")
-      t.deepEqual(body, {some: "good json"}, "expected content")
+      t.deepEqual(body, { some: "good json" }, "expected content")
+      t.end()
+    })
+  })
+
+  test("promise get json", function (t) {
+    var opts = {
+      uri: servers.http_address + "/foo.json",
+      json: true
+    }
+    promise(opts).then(function (result) {
+      t.equal(result.response.statusCode, 200, "statusCode 200")
+      t.deepEqual(result.body, { some: "good json" }, "expected content")
       t.end()
     })
   })
@@ -60,13 +73,14 @@ require("./test_server")(function ready(servers) {
     })
   })
 
-  test("promise get json", function (t) {
+  test("promise get json, but response has no body", function (t) {
     var opts = {
-      uri: servers.http_address + "/foo.json",
+      uri: servers.http_address + "/redirect.json",
       json: true
     }
-    promise(opts).then(function (body) {
-      t.deepEqual(body, {some: "good json"}, "expected content")
+
+    promise(opts).then(function (result) {
+      t.equal(result.response.statusCode, 301, "statusCode 301")
       t.end()
     })
   })
@@ -109,6 +123,19 @@ require("./test_server")(function ready(servers) {
     })
   })
 
+  test("promise timeout", function (t) {
+    var opts = {
+      uri: servers.http_address + "/slow",
+      timeout: 10
+    }
+    promise(opts).catch(function (err) {
+      t.ok(err, "expect an error")
+      t.equal(err.message, "client request timeout", "correct error message")
+      t.end()
+    })
+  })
+
+
   test("post string", function (t) {
     var opts = {
       uri: servers.http_address,
@@ -119,6 +146,19 @@ require("./test_server")(function ready(servers) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 201, "statusCode 201")
       t.equal(body.toString(), "OK")
+      t.end()
+    })
+  })
+
+  test("promise post string", function (t) {
+    var opts = {
+      uri: servers.http_address,
+      method: "POST",
+      body: "test data"
+    }
+    promise(opts).then(function (result) {
+      t.equal(result.response.statusCode, 201, "statusCode 201")
+      t.equal(result.body.toString(), "OK")
       t.end()
     })
   })
@@ -137,17 +177,44 @@ require("./test_server")(function ready(servers) {
     })
   })
 
+  test("promise post buffer", function (t) {
+    var opts = {
+      uri: servers.http_address,
+      method: "POST",
+      body: new Buffer("test data")
+    }
+    promise(opts).then(function (result) {
+      t.equal(result.response.statusCode, 201, "statusCode 201")
+      t.equal(result.body.toString(), "OK")
+      t.end()
+    })
+  })
+
   test("post object", function (t) {
     var opts = {
       uri: servers.http_address + "/post.json",
       method: "POST",
-      body: {test: "data"},
+      body: { test: "data" },
       json: true
     }
     request(opts, function (err, response, body) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 201, "statusCode 201")
-      t.deepEqual(body, {cool: "beans"})
+      t.deepEqual(body, { cool: "beans" })
+      t.end()
+    })
+  })
+
+  test("promise post object", function (t) {
+    var opts = {
+      uri: servers.http_address + "/post.json",
+      method: "POST",
+      body: { test: "data" },
+      json: true
+    }
+    promise(opts).then(function (result) {
+      t.equal(result.response.statusCode, 201, "statusCode 201")
+      t.deepEqual(result.body, { cool: "beans" })
       t.end()
     })
   })
@@ -162,6 +229,19 @@ require("./test_server")(function ready(servers) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 201, "statusCode 201")
       t.deepEqual(body.toString(), "OK")
+      t.end()
+    })
+  })
+
+  test("promise post stream", function (t) {
+    var opts = {
+      uri: servers.http_address,
+      method: "POST",
+      body: spigot(["te", "st", " ", "da", "ta"])
+    }
+    promise(opts).then(function (result) {
+      t.equal(result.response.statusCode, 201, "statusCode 201")
+      t.deepEqual(result.body.toString(), "OK")
       t.end()
     })
   })
@@ -191,7 +271,7 @@ require("./test_server")(function ready(servers) {
     request(opts, function (err, response, body) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 200, "statusCode 200")
-      t.deepEqual(body, {some: "good json"}, "expected content")
+      t.deepEqual(body, { some: "good json" }, "expected content")
       t.end()
     })
   })
@@ -263,7 +343,7 @@ require("./test_server")(function ready(servers) {
     var opts = {
       uri: servers.https_address + "/post.json",
       method: "POST",
-      body: {test: "data"},
+      body: { test: "data" },
       json: true,
       ca: ca,
       agent: false
@@ -271,7 +351,7 @@ require("./test_server")(function ready(servers) {
     request(opts, function (err, response, body) {
       t.notOk(err, "no error")
       t.equal(response.statusCode, 201, "statusCode 201")
-      t.deepEqual(body, {cool: "beans"})
+      t.deepEqual(body, { cool: "beans" })
       t.end()
     })
   })
