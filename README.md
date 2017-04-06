@@ -49,13 +49,13 @@ var requestPromise = require("client-request/promise")
 
 requestPromise(options).then(function (result) {
   if (result.response.statusCode === 201) {
-    console.log(result.response.headers.location);
+    console.log(result.response.headers.location)
   } else {
-    console.log(result.body);
+    console.log(result.body)
   }
 }).catch(err){
-  console.log(err);
-});
+  console.log(err)
+})
 ```
 
 ```javascript
@@ -64,10 +64,10 @@ var requestPromise = require("client-request/promise")
 // ONLY in ES2016 and later, you can await a promise in an async function (generator)
 async function(){
   try {
-    let result = await requestPromise(options);
-    console.log(result.response.headers.location);
+    let result = await requestPromise(options)
+    console.log(result.response.headers.location)
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
 }
 ```

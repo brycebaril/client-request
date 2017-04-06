@@ -16,8 +16,8 @@ function requestPromise(opts) {
         var result = {
           body: body,
           response: response
-        };
-        resolve(result);
+        }
+        resolve(result)
       }
     })
   })
