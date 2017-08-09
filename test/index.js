@@ -135,7 +135,6 @@ require("./test_server")(function ready(servers) {
     })
   })
 
-
   test("post string", function (t) {
     var opts = {
       uri: servers.http_address,
@@ -396,4 +395,18 @@ require("./test_server")(function ready(servers) {
       t.end()
     })
   })
+
+  test("using options.url", function (t) {
+    var opts = {
+      url: servers.http_address
+    }
+    request(opts, function (err, response, body) {
+      t.notOk(err, "no error")
+      t.equal(response.statusCode, 200, "statusCode 200")
+      t.ok(Buffer.isBuffer(body), "body is a Buffer")
+      t.equal(body.toString(), "HELLO THERE", "expected content")
+      t.end()
+    })
+  })
+
 })

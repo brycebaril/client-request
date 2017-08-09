@@ -156,7 +156,7 @@ function request(requestOptions, callback) {
 
 function formatOptions(options) {
   var headers = options.headers || {}
-  var u = url.parse(options.uri)
+  var u = url.parse(options.uri || options.url)
   var au = u.auth || options.auth
   if (au) {
       headers.authorization = "Basic " + Buffer(au).toString("base64")
