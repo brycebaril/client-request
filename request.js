@@ -7,6 +7,18 @@ var https = require("https")
 var url = require("url")
 var path = require("path")
 
+var CORE_HTTPS_OPTS = [
+  'pfx',
+  'key',
+  'cert',
+  'ca',
+  'ciphers',
+  'rejectUnauthorized',
+  'secureProtocol',
+  'passphrase',
+  'servername'
+]
+
 var clientId = require("crypto").randomBytes(3).toString("hex")
 
 var PassThrough = require("stream").PassThrough
@@ -175,7 +187,7 @@ function formatOptions(options) {
   }
 
   if (protocol === 'https:') {
-    ["pfx", "key", "cert", "ca", "ciphers", "rejectUnauthorized", "secureProtocol"].forEach(function ea(key) {
+    CORE_HTTPS_OPTS.forEach(function ea(key) {
       if (options[key]) {
         opts[key] = options[key]
       }

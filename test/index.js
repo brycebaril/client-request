@@ -260,6 +260,19 @@ require("./test_server")(function ready(servers) {
     })
   })
 
+  test("https opts", function (t) {
+    var opts = {
+      uri: servers.https_address,
+      ca: ca,
+      agent: false,
+      servername: 'notthisserver.com'
+    }
+    request(opts, function (err, response, body) {
+      t.error(err.Error, 'bad servername for this cert')
+      t.end()
+    })
+  })
+
   test("https get json", function (t) {
     var opts = {
       uri: servers.https_address + "/foo.json",
