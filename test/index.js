@@ -1,7 +1,10 @@
+"use strict"
+
 var test = require("tape")
 
 var request = require("../request")
 var promise = require("../promise")
+var concat = require("../concat")
 var spigot = require("stream-spigot")
 var fs = require("fs")
 var path = require("path")
@@ -422,4 +425,35 @@ require("./test_server")(function ready(servers) {
     })
   })
 
+  test("using options.stream", function (t) {
+    var opts = {
+      uri: servers.http_address,
+      stream: true
+    }
+    request(opts, function (err, response, stream) {
+      t.notOk(err, "no error")
+      t.equal(response.statusCode, 200, "statusCode 200")
+      t.ok(stream.pipe != null && (typeof stream.pipe === 'function'), 'stream quacks like a duck')
+      stream.pipe(concat((contents) => {
+        t.ok(Buffer.isBuffer(contents), 'contents are a Buffer')
+        t.equal(contents.toString(), 'HELLO THERE', 'expected contents')
+        t.end()
+      }))
+    })
+  })
+
+  test("stream timeout", function (t) {
+    var opts = {
+      uri: servers.http_address + "/slow",
+      timeout: 10,
+      stream: true
+    }
+    request(opts, function (err, response, body) {
+      t.ok(err, "expect an error")
+      t.equal(err.message, "client request timeout", "correct error message")
+      t.notOk(response.statusCode, "no statusCode (timed out)")
+      t.notOk(body, "no body")
+      t.end()
+    })
+  })
 })

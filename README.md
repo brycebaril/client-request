@@ -18,7 +18,6 @@ Things it does support from the `request` API:
 * options.json
 
 If you want...
-* streaming -- use [hyperquest](http://npm.im/hyperquest) instead of this library (it's awesome!)
 * `request.form` -- use [form-urlencoded](https://www.npmjs.com/package/form-urlencoded), a zero-deps form body encoder. (example below)
 * `options.qs` -- use the core `querystring` library or [qs](http://npm.im/qs) and append the querystring to your url path prior to sending it to request
 * anything else ... find a module and suggest it here!
@@ -107,6 +106,7 @@ Options:
 * `json` -- attempt to JSON.parse the response body and return the parsed object (or an error if it doesn't parse)
 * `timeout` -- a timeout in ms for the client to abort the request
 * `body` -- the raw body to send to the server (e.g. PUT or POST) -- if `body` is a string/buffer, it will send that, if `body` quacks like a stream, stream it, otherwise it will send it JSON serialized.
+* `stream` -- if `true` callback will return raw `http.ServerResponse` stream. Stream error handling will be up to you.
 
 Extensions
 ===

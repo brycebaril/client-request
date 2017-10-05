@@ -82,7 +82,9 @@ function request(requestOptions, callback) {
     debug(requestId, "calling callback err(" + err + ")")
     debug(requestId, "statusCode:", metadata.statusCode)
     debug(requestId, "reply headers:", metadata.headers)
-    debug(requestId, "content:", Buffer.isBuffer(response) ? response.toString() : response)
+    if (!options.stream) {
+      debug(requestId, "content:", Buffer.isBuffer(response) ? response.toString() : response)
+    }
     return callback(err, metadata, response)
   }
 
@@ -109,14 +111,16 @@ function request(requestOptions, callback) {
 
     if (contentLength === 0) {
       return reply(null, null)
+    } else if (requestOptions.stream) {
+      // return the raw response stream
+      return reply(null, res)
     } else {
       res.pipe(concat(collect))
+      res.once("error", function resError(err) {
+        return reply(err)
+      })
     }
-    res.once("error", function resError(err) {
-      return reply(err)
-    })
   })
-
 
   var origAbort = req.abort
   req.abort = function abort() {
