@@ -127,6 +127,7 @@ function request (requestOptions, callback) {
     totalTimeout = setTimeout(function onTimeout () {
       req.abort()
       var err = new Error('client request timeout')
+      err.code = 'ECONNRESET'
       return reply(err)
     }, requestOptions.timeout)
 
@@ -134,6 +135,7 @@ function request (requestOptions, callback) {
     req.setTimeout(requestOptions.timeout, function onSocketTimeout () {
       req.abort()
       var err = new Error('Socket Timeout on client request')
+      err.code = 'ECONNRESET'
       return reply(err)
     })
   }
