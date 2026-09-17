@@ -120,6 +120,7 @@ require('./test_server')(function ready (servers) {
     request(opts, (err, response, body) => {
       t.ok(err, 'expect an error')
       t.equal(err.message, 'client request timeout', 'correct error message')
+      t.equal(err.code, 'ECONNRESET', 'correct error code')
       t.notOk(response.statusCode, 'no statusCode (timed out)')
       t.notOk(body, 'no body')
       t.end()
@@ -134,6 +135,7 @@ require('./test_server')(function ready (servers) {
     promise(opts).catch((err) => {
       t.ok(err, 'expect an error')
       t.equal(err.message, 'client request timeout', 'correct error message')
+      t.equal(err.code, 'ECONNRESET', 'correct error code')
       t.end()
     })
   })
@@ -316,6 +318,7 @@ require('./test_server')(function ready (servers) {
     request(opts, (err, response, body) => {
       t.ok(err, 'expect an error')
       t.equal(err.message, 'client request timeout', 'correct error message')
+      t.equal(err.code, 'ECONNRESET', 'correct error code')
       t.notOk(response.statusCode, 'no statusCode (timed out)')
       t.notOk(body, 'no body')
       t.end()
@@ -451,6 +454,7 @@ require('./test_server')(function ready (servers) {
     request(opts, (err, response, body) => {
       t.ok(err, 'expect an error')
       t.equal(err.message, 'client request timeout', 'correct error message')
+      t.equal(err.code, 'ECONNRESET', 'correct error code')
       t.notOk(response.statusCode, 'no statusCode (timed out)')
       t.notOk(body, 'no body')
       t.end()
